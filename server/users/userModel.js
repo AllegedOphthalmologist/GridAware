@@ -6,9 +6,12 @@ var userSchema = new mongoose.Schema({
     unique: true
   }, 
   password: String,
+  token: String,
   utilityAPIData: { 
     account_auth: String,
-    uid: String, 
+    account_uid: String,
+    service_uid: String,
+    PGE_username: String, 
     bill_count: Number, 
     utility: String, 
     utility_service_address: String

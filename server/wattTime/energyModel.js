@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var WattEnergySchema = new mongoose.Schema({ 
   timestamp: String,
   created_at: String, 
-  carbon: String, 
+  carbon: Number, 
   genmix: [{ 
     fuel: String, 
     gen_MW: Number
@@ -15,5 +15,9 @@ var WattEnergySchema = new mongoose.Schema({
 }); 
 
 var WattTotal = mongoose.model('WattTotal', WattEnergySchema);
+var TestData = mongoose.model('TestData', WattEnergySchema);
 
-module.exports = WattTotal;
+module.exports = { 
+  WattTotal: WattTotal, 
+  TestData: TestData
+};

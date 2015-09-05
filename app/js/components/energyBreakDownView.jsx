@@ -1,12 +1,18 @@
 var React = require('react');
-var chart = require('./chart.jsx');
+var chart = require('./donutChart.js');
 
+//material ui
+var mui = require('material-ui');
+var ThemeManager = new mui.Styles.ThemeManager();
 
-var Button = require('react-bootstrap').Button;
-var Modal = require('react-bootstrap').Modal;
+//dialog
+var Dialog = require('./dialogWindow.jsx');
 
+//stores
 var DataStore = require('./../stores/DataStore');
+var modalStore = require('./../stores/modalStore');
 
+var ViewActions = require('./../actions/ViewActions');
 
 var ModalI = React.createClass({
 
@@ -16,52 +22,69 @@ var ModalI = React.createClass({
         "Watt": [{}],
         "Utility": [{}]
       },
-      showModal: false,
     };
   },
 
-  // getChartState: function(){
-  //   return {
-  //     data: this.props.data,
-  //     domain: this.props.domain
-  //   }
-  // },
+  dismount: function(){
+    var isOpen = modalStore.getModalState().isOpen;
+    if(!isOpen){
+      window.removeEventListener('resize', this.reSizeGraphs);
+    }
+  },
 
   componentDidMount: function(){
     this.setState({ data: DataStore.getData() });
+    modalStore.addChangeListener(this.dismount);
   },
 
   componentDidUpdate: function(){
-    console.log(this.state.data, '==================hello===============================')
-    chart.create('.modal-body', this.state.data);
+    this.makeGraphs();
+    window.addEventListener('resize', this.reSizeGraphs);
   },
 
-  open: function(){
-    this.setState({showModal: true});
+  componentWillUnmount: function(){
+    // modalStore.removeEventListener(this.dismount);
+    window.removeEventListener('resize', this.reSizeGraphs);
   },
 
-  close: function(){
-    this.setState({showModal: false})
+  reSizeGraphs: function(){
+    chart.removeGraph('test1');
+    chart.removeGraph('test2');
+
+    this.makeGraphs();
+  },
+
+  makeGraphs: function(){
+    chart.create('.modal-body', this.state.data.Watt[0].genmix.slice(1, 4), 'test1');
+    chart.title('test1', 'This is break down of renewable energy');
+    chart.create('.modal-body', this.state.data.Watt[0].genmix, 'test2');
+    chart.title('test2', 'This is break down of all energy on the grid');
   },
 
   render: function(){
-    return (
-      <div>
-        <Button onClick={this.open}>Launch</Button>
-
-        <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header>
-            <Modal.Title>This is a modal</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>  
-            <div>this is a break down of where the electricity is coming from</div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.close}>Close</Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    )
+    var modalbody = 'modal-body';
+    if(this.props.dialog){
+      return (
+        <div>
+          <Dialog 
+            openImmediately={this.props.openImmediately}>
+            
+            <div style={{'textAlign': 'center'}} className={modalbody}>
+              <h3>This is a break down of how the grid is being powered</h3> 
+            </div>
+            
+          </Dialog>
+        </div>
+      );
+    }else{
+      return(
+        <div>
+          <div style={{'textAlign': 'center'}} className={modalbody}>
+            <h4>This is a break down of how the grid is being powered</h4> 
+          </div>
+        </div>
+      );
+    }
   }
 });
 

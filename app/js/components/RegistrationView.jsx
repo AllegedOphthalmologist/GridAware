@@ -1,57 +1,109 @@
 var React = require('react/addons');
+var Router = require('react-router');
+
+//MUI
+var mui = require('material-ui');
+var ThemeManager = new mui.Styles.ThemeManager();
+var FlatButton = mui.FlatButton;
+
+//dialog
+var Dialog = require('./dialogWindow.jsx');
 
 // Actions
 var ViewActions = require('./../actions/ViewActions');
+var ActionTypes = require('./../constants/Constants').ActionTypes;
+
+// Form validation
+var Formsy = require('formsy-react');
+var FormInput = require('./FormInput.jsx');
+
+// Stores
+var UserStore = require('./../stores/UserStore');
+
+//Dispatcher
+var Dispatcher = require('./../dispatcher/Dispatcher');
 
 var RegistrationView = React.createClass({
   // Use a bit of two way data binding because forms are a pain otherwise.
-  mixins: [React.addons.LinkedStateMixin],
+  mixins: [React.addons.LinkedStateMixin, Router.Navigation],
 
   getInitialState: function() {
     return {
-      username: null,
-      password: null,
-      pgeUsername: null,
-      pgePassword: null,
-      pgeFullName: null
+      canSubmit: false
     };
   },
-
-  submitForm: function(){
-    //TODO: POST this.state to server
-    ViewActions.registerUser(this.state);
+  componentDidMount: function(){
+    var context = this;
+    this.token = Dispatcher.register(function (dispatch) {
+      var action = dispatch.action;
+      if (action.type === ActionTypes.USER_LOGIN_FAILURE) {
+        // console.log('registration failure');
+        context.failedRegistration();
+      } 
+      else if (action.type === ActionTypes.USER_LOGIN) {
+        // console.log('registration success');
+        context.redirectHome();
+      } 
+    });
   },
-
+  failedRegistration: function(){
+    $('.login-failure').css('visibility', 'visible');
+    $('.spinner-container').css('visibility', 'hidden');
+    $('.btn-submit').prop('disabled', false);
+  },
+  componentDidUnmount: function(){
+    Dispatcher.unregister(this.token);
+  },
+  redirectHome: function(){
+    this.transitionTo("/");
+  },
+  enableButton: function () {
+    this.setState({
+      canSubmit: true
+    });
+  },
+  disableButton: function () {
+    this.setState({
+      canSubmit: false
+    });
+  },
+  submitForm: function(data){
+    // console.log(data);
+    $('.spinner-container').css('visibility', 'visible');
+    $('.btn-submit').prop('disabled', true);
+    ViewActions.registerUser(data);
+  },
   render: function() {
     return (
-      <div className="container">
-        <div className="login jumbotron center-block">
-        <h2>Register</h2>
-          <form id="register" role="form">
-            <div className="form-group">
-              <label htmlFor="pgeFullName">Full Name: </label><br />
-              <input className="form-control" id="pgeFullName" type="text" valueLink={this.linkState('pgeFullName')} />
+      <Dialog openImmediately={true} >
+        <div className="container">
+          <div /*className="login jumbotron center-block"*/>
+          <h2>Register</h2>
+            <Formsy.Form onSubmit={this.submitForm} className="registration" onValid={this.enableButton} onInvalid={this.disableButton}>
+              <FormInput name="pgeFullName" title="Full Name" type="text" 
+                validations="isWords" validationError="Please enter your name"/>
+              <FormInput name="username" title="Email" type="text" 
+                validations="isEmail" validationError="Please enter a valid email."/>
+              <FormInput name="password" title="Password" type="password" 
+                validations={{minLength:6, maxLength: 20}} 
+                validationError="Password must be between 6 and 20 characters"/>
+              <FormInput name="pgeUsername" title="PG&E Username" type="text"/>
+              <FormInput name="pgePassword" title="PG&E Password" type="password"/>
+            <FlatButton className="btn btn-submit" type="submit" disabled={!this.state.canSubmit}>Register</FlatButton>
+            </Formsy.Form>
+            
+            <div className="spinner-container">
+              <div className="spinner-loader">
+                Loading…
+              </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="username">Username: </label><br />
-              <input className="form-control" id="username" type="text" valueLink={this.linkState('username')}/>
+            <div className="login-failure">
+              <p>Failed to Register.</p>
+              <p>Is your PG&E Login Information Correct?</p>
             </div>
-            <div className="form-group">
-              <label htmlFor="password">Password: </label><br />
-              <input className="form-control" id="password" type="password" valueLink={this.linkState('password')} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="pgeUsername">PG&E Username: </label><br />
-              <input className="form-control" id="pgeUsername" type="text" valueLink={this.linkState('pgeUsername')} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="pgePassword">PG&E Password: </label><br />
-              <input className="form-control" id="pgePassword" type="password" valueLink={this.linkState('pgePassword')} />
-            </div>
-          <button className="btn btn-submit" type="button" onClick={this.submitForm}>Register</button>
-          </form>
+          </div>
         </div>
-      </div>
+      </Dialog>
     );
   }
 });

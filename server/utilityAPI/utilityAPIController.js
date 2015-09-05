@@ -22,13 +22,15 @@ var loadNewReadings = function() {
   var end_date = year + '-' + month + '-' + end_day;
 
   UtilityAPI.getActiveUsers(function(accounts){
-    accounts.forEach(function(account){
-      if(account.bill_count > 0){
-        UtilityAPI.getIntervalData(account.uid, start_date, end_date, function(intervals){
-          populateDB(intervals);
-        });
-      }
-    });
+    if(Array.isArray(accounts)){
+      accounts.forEach(function(account){
+        if(account.bill_count > 0){
+          UtilityAPI.getIntervalData(account.uid, start_date, end_date, function(intervals){
+            populateDB(intervals);
+          });
+        }
+      });
+    }
   });
 }
 
@@ -36,6 +38,7 @@ var loadNewReadings = function() {
 // findOneAndUpdate will also update an existing record if it changed for some reason
 var populateDB = function(intervals){
   intervals.forEach(function(reading){
+    // console.log(reading);
     MeterReading.findOneAndUpdate({interval_end: reading['interval_end']}, reading, {upsert: true}, function(err, result){
       if(err){
         throw err;
@@ -45,7 +48,11 @@ var populateDB = function(intervals){
 }
 
 var getAllReadings = function(cb){
-  MeterReading.find({}, function(err, docs) {
+  
+  // 604800000 is 7 days in milliseconds
+  var lastWeek = new Date(Date.now()-604800000);
+
+  MeterReading.find({'interval_end': {$gt: lastWeek}}, function(err, docs) {
     if (!err){ 
       cb(docs);
     } else {throw err;}

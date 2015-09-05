@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         },
         module: {
           loaders: [
-            { test: /\.jsx$/, loader: 'jsx-loader'}
+            { test: /\.jsx$/, loader: 'jsx-loader', include: './app/js/', exclude: './node_modules/'}
           ]
         }
       }
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
       },
       client: {
         files: ['app/**/*.js', 'app/**/*.jsx'],
-        tasks: ['test', 'webpack:app']
+        tasks: ['clear', 'test', 'webpack:app']
       },
       css: {
         files: ['app/main.css'],
@@ -83,7 +83,12 @@ module.exports = function(grunt) {
 
     nodemon: {
       dev: {
-        script: 'server/server.js'
+        script: 'server/server.js',
+        options: {
+          ignore: ['node_modules'],
+          watch: ['server'],
+          delay: 1000
+        },
       }
     }
 
@@ -99,6 +104,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-webpack');
   grunt.loadNpmTasks('grunt-services');
+  grunt.loadNpmTasks('grunt-clear');
 
   grunt.registerTask('server-dev', function(target) {
     var nodemon = grunt.util.spawn({

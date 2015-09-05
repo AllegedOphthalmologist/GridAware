@@ -1,59 +1,43 @@
 var React = require('react');
 
-var Button = require('react-bootstrap').Button;
-var Modal = require('react-bootstrap').Modal;
+//material ui
+var mui = require('material-ui');
+var ThemeManager = new mui.Styles.ThemeManager();
 
-var ModalI = require('./energyBreakDownView.jsx')
+//Modals
+var donutGraphWindow = require('./energyBreakDownView.jsx');
 
 // Actions
 var ViewActions = require('./../actions/ViewActions');
 
+// Constants
+var Modals = require('./../constants/Constants').ModalTypes;
+
 //Store
 var DataStore = require('./../stores/DataStore');
+var BulbStore = require('./../stores/BulbStore');
+
+// Child Views
+var LineGraphView = require('./LineGraphView.jsx');
+var GraphToolBar = require('./graphToolBar.jsx');
+var BulbView = require('./bulbView.jsx');
 
 var MainView = React.createClass({
-  getInitialState: function(){
-    return {
-      data: {
-        "Watt": [{}],
-        "Utility": [{}]
-      }
-    };
-  },
+  
 
-  
-  loadData: function (data) {
-    this.setState({data: DataStore.getData()});
-  },
-  
-  componentDidMount: function (){
-    DataStore.addChangeListener(this.loadData);
-    ViewActions.loadWatt()
-    .then(ViewActions.loadUtility)
-    .catch(function(err) {
-      console.log("ERROR: ", err);
-    });
-  },
-  
-  componentWillUnmount: function (){
-    DataStore.removeChangeListener(this.loadData);
+  showDonutModal: function(){
+    ViewActions.loadModal(donutGraphWindow);
   },
 
   render: function() {
     return (
-      <div>This is the MainView
-      <div>Watt is Currently {this.state.data}</div>     
-      <div>Power is Currently {this.state.data.energy_state}</div>
-      {(this.state.data.at_peak) ? <div>At Peak Use!</div> : null}
-
-
-      <ModalI> </ModalI>      
-      
-
+      <div>
+          <BulbView />   
+          <LineGraphView height={300} width={900} margin={5} />  
       </div>
-      
     );
   }
 });
 
 module.exports = MainView;
+        
