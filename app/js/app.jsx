@@ -1,4 +1,5 @@
 var React = require('react');
+var cookie = require('react-cookie');
 
 // Material UI
 var injectTapEventPlugin = require("react-tap-event-plugin");
@@ -33,6 +34,7 @@ var modalStore = require('./stores/modalStore');
 // Stores -- Load here so Stores can begin listening to Events
 var UserStore = require('./stores/UserStore');
 var DataStore = require('./stores/DataStore');
+var ModalStore = require('./stores/modalStore');
 
 // Actions
 var ViewActions = require('./actions/ViewActions');
@@ -61,6 +63,7 @@ var App = React.createClass({
 
   modalListener: function(){
     var modalSpecs = modalStore.getModalState();
+    console.log(modalSpecs);
     this.setState({showModal: modalSpecs.isOpen, modal: modalSpecs.modal});
   },
 
@@ -84,10 +87,25 @@ var App = React.createClass({
     var context = this;
     this.token = Dispatcher.register(function (dispatch){
       var action = dispatch.action;
+      if(action.type === ActionTypes.USER_LOGIN){
+        context.showSnack('Logged In');
+      } 
       if(action.type === ActionTypes.SHOW_SNACK){
-        context.showSnack();
+        context.showSnack('Logged Out');
       }
     });
+
+    var token = cookie.load('token');
+    if(token){
+      // console.log('token: ', token);
+      
+      // Need to Toggle the Modal here, otherwise a login event 
+      // Tries to close a modal that doesn't exist, resulting in a 
+      // cascading hell of impossible to track down react error messages.
+      ModalStore.toggleModal();
+      
+      ViewActions.loginUser({token: token});
+    }
   },
 
   componentWillUnmount: function (){
@@ -102,7 +120,8 @@ var App = React.createClass({
     ViewActions.toggleNavMenu();
   },
 
-  showSnack: function(){
+  showSnack: function(message){
+    this.setState({logMes: message});
     this.refs.snackbar.show();
   },
 
@@ -128,7 +147,7 @@ var App = React.createClass({
       </div>
       <SnackBar
           ref='snackbar'
-          message='Logged out'
+          message={this.state.logMes}
           autoHideDuration={2000} />
       </div>
     );
