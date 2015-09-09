@@ -21,8 +21,25 @@ var UserStore = require('./../stores/UserStore');
 // Child Views
 var GraphToolBar = require('./graphToolBar.jsx');
 
-// Root View
-var LineGraphView = React.createClass({
+// Root View //////////////////////////////////////////////////////
+/*
+  Exposed Properties
+
+  width   - Integer  - width of the graphContainer
+  height  - Integer  - height of the graphContainer
+  margin  - Integer  - margin around the chartContainer
+  tabs    - Boolean  - Choose whether or not to show the tabs bar
+  value   - Constant - Taken from Constants.js GraphTypes, choose which graph to show initially
+*/
+var EnergyGraphView = React.createClass({
+
+  propTypes: {
+    width: React.PropTypes.number,
+    height: React.PropTypes.number,
+    margin: React.PropTypes.number,
+    tabs: React.PropTypes.bool,
+    value: React.PropTypes.string,
+  },
 
   // React Functions /////////////////////////////////
 
@@ -30,6 +47,16 @@ var LineGraphView = React.createClass({
     return {
       data: null,
       user: null,
+    };
+  },
+
+  getDefaultProps: function() {
+    return {
+      width: 900,
+      height: 300,
+      margin: 10,
+      tabs: false,
+      value: GraphTypes.MAIN,
     };
   },
 
@@ -81,8 +108,11 @@ var LineGraphView = React.createClass({
     UserStore.addChangeListener(this.loadUser);
 
     this.loadData()
-    .then(this.drawMainGraph)
     .then(this.loadUser)
+    // .then(this.drawMainGraph)
+    .then(function() {
+      that.handleTabChange(that);
+    })
     .catch(function(err) {
       console.log("ERROR: ", err);
     });
@@ -113,7 +143,7 @@ var LineGraphView = React.createClass({
   drawUserGraph: function() {
     var el = React.findDOMNode(this.refs.graphContainer);
     el.innerHTML = '';
-    // console.log("Utility", this.state.data.Utility);
+
     if (this.state.user.username) {
       if (this.state.data.Utility.length > 1) {
         EnergyChart.graph(el, {
@@ -142,25 +172,33 @@ var LineGraphView = React.createClass({
   },
 
   handleTabChange: function(tab) {
+
+    // var props = tab.props || {value: GraphTypes.MAIN};
+
     switch(tab.props.value) {
+
       case GraphTypes.MAIN:
         this.drawMainGraph();
         break;
+
       case GraphTypes.USER_KWH:
         this.drawUserGraph();
         break;
+
       default:
         var el = React.findDOMNode(this.refs.graphContainer);
+        console.log("TAB ERROR");
         el.innerHTML = '';
         break;
     }
   },
 
   render: function () {
+    var tabs = this.props.tabs ? <GraphToolBar handleTabChange={this.handleTabChange} ref='graphToolBar' value={this.props.value} /> : "";
     return (
 
-      <Paper className="mainGraphView" style={{margin: '50px', minWidth:"900px"}}>
-        <GraphToolBar handleTabChange={this.handleTabChange} />
+      <Paper className="mainGraphView" style={{margin: '30px 0', minWidth:"900px"}}>
+        {tabs}
         <div className='graphOuterContainer'>
           <div className ="graphContainer" ref="graphContainer"></div>
         </div>
@@ -171,4 +209,4 @@ var LineGraphView = React.createClass({
 
 });
 
-module.exports = LineGraphView;
+module.exports = EnergyGraphView;
