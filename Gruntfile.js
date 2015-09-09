@@ -32,7 +32,7 @@ module.exports = function(grunt) {
       },
       target: {
         files: {
-          './build/main.min.css': ['./app/main.css']
+          './build/main.min.css': ['./app/styles/main.css', './app/styles/full.css']
         }
       }
     },
@@ -62,6 +62,7 @@ module.exports = function(grunt) {
       }
     },
 
+
     watch: {
       server: {
         files: ['server/**/*.js'],
@@ -69,11 +70,12 @@ module.exports = function(grunt) {
       },
       client: {
         files: ['app/**/*.js', 'app/**/*.jsx'],
-        tasks: ['clear', 'test', 'webpack:app'],
+        tasks: ['test', 'webpack:app'],
       },
       css: {
-        files: ['app/main.css'],
-        tasks: ['cssmin'],
+
+        files: ['app/styles/main.css','app/styles/full.css'],
+        tasks: ['cssmin']
       },
       index: {
         files: ['app/index.html'],
@@ -107,13 +109,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-webpack');
   grunt.loadNpmTasks('grunt-services');
-  grunt.loadNpmTasks('grunt-clear');
 
   grunt.registerTask('server-dev', function(target) {
     var nodemon = grunt.util.spawn({
       cmd: 'grunt',
       grunt: true,
-      args: 'nodemon'
+      args: 'nodemon',
+      opts: {maxBuffer: 500*1024},
     });
 
     nodemon.stdout.pipe(process.stdout);
