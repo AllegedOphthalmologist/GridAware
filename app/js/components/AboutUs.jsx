@@ -11,6 +11,8 @@ var DataStore = require('./../stores/DataStore');
 var modalStore = require('./../stores/modalStore');
 var BulbStore = require('./../stores/BulbStore');
 
+//Dispatcher
+var Dispatcher = require('./../dispatcher/Dispatcher');
 
 //Child Views
 var BulbView = require('./bulbView.jsx');
@@ -20,6 +22,7 @@ var GraphView = require('./EnergyGraphView.jsx');
 
 //Actions
 var ViewActions = require('./../actions/ViewActions');
+var ActionTypes = require('./../constants/Constants').ActionTypes;
 
 //Constants
 var GraphTypes = require('./../constants/Constants').GraphTypes;
@@ -59,17 +62,19 @@ var AboutUs = React.createClass({
     }
 
   },
-
-  componentDidMount: function(){ 
+  componentWillMount: function(){
     DataStore.addChangeListener(this.loadData);
     BulbStore.addChangeListener(this.gridState);
-
-
-    ViewActions.loadWatt()
-    .then(this.makeGraphs)
-    .catch(function(err){ 
-      console.log("ERROR: ");
-      console.trace(err);
+  },
+  
+  componentDidMount: function(){ 
+    var context = this;
+    this.token = Dispatcher.register(function (dispatch) {
+      var action = dispatch.action;
+      if (action.type === ActionTypes.WATT_LOADED) {
+        //console.log('login failure');
+        context.makeGraphs();
+      } 
     });
   }, 
 
@@ -80,6 +85,9 @@ var AboutUs = React.createClass({
 
   componentWillUnmount: function(){ 
     window.removeEventListener('resize', this.reSizeGraphs);
+    DataStore.removeChangeListener(this.loadData);
+    BulbStore.removeChangeListener(this.gridState);
+    Dispatcher.unregister(this.token);
   },
 
   reSizeGraphs: function(){ 
@@ -157,7 +165,7 @@ var AboutUs = React.createClass({
             <div className="row">
                 <div className="col-lg-12">
                   <h2>How Does The Grid Work!?</h2>
-          <GraphView height={300} width={900} margin={10} tabs={false} value={GraphTypes.MAIN} />  
+          <GraphView height={300} width={740} margin={10} tabs={false} value={GraphTypes.MAIN} />  
                         <p className="section-paragraph">Each day, the mix of energy generation resources changes as demand fluctuates. 
                         The grid operator must efficiently balance power generation and consumer electricity demand, 
                         using renewable resources whenever possible. Periods of high demand and low availability of renewable resources translate to more pollution 

@@ -41,8 +41,12 @@ var LoginView = React.createClass({
     this.token = Dispatcher.register(function (dispatch) {
       var action = dispatch.action;
       if (action.type === ActionTypes.USER_LOGIN_FAILURE) {
-        console.log('login failure');
+        //console.log('login failure');
         context.failedLogin();
+      } 
+      if (action.type === ActionTypes.USER_LOGIN) {
+        //console.log('login failure');
+        context.transitionTo('profile');
       } 
     });
   },
@@ -69,7 +73,6 @@ var LoginView = React.createClass({
     this.disableButton();
     // console.log('Logging in with: ', data);
     ViewActions.loginUser(data);
-    this.transitionTo('profile');
   },
 
   handleRegister: function(){
@@ -81,9 +84,8 @@ var LoginView = React.createClass({
   render: function() {
     return (
       <Dialog openImmediately={true}>
-      <div className="container">
-        <div>
-        <h2>Login</h2>
+      <div className="LoginContainer">
+        <h2 id='loginTitle'>Login</h2>
           
           <Formsy.Form onSubmit={this.submitForm} className="login" onValid={this.enableButton} onInvalid={this.disableButton}>
             <FormInput name="username" title="Email" type="text" 
@@ -92,16 +94,17 @@ var LoginView = React.createClass({
               validations="minLength:6" validationError="Password must be at least 6 characters in length"/>
           <FlatButton className="btn btn-submit" type="submit" disabled={!this.state.canSubmit}>Login</FlatButton>
           </Formsy.Form>
-          
+      </div>
+
+      <div className="spinnerFailure">
           <div className="spinner-container">
             <div className="spinner-loader">Loading…</div>
           </div>
           <div className="login-failure">
             <p>Login Failure.</p>
-            <p>Have you <span style={{color:'blue', 'text-decoration': 'underline'}} onClick={this.handleRegister}>Registered</span>?</p>
+            <p>Have you <span style={{color:'blue', 'textDecoration': 'underline'}} onClick={this.handleRegister}>Registered</span>?</p>
           </div>
         </div>
-      </div>
       </Dialog>
     );
   }
