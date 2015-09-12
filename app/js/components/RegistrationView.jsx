@@ -33,49 +33,55 @@ var RegistrationView = React.createClass({
     };
   },
   componentDidMount: function(){
+    UserStore.addChangeListener(this.successfulLogin);
     var context = this;
+
     this.token = Dispatcher.register(function (dispatch) {
       var action = dispatch.action;
       if (action.type === ActionTypes.USER_LOGIN_FAILURE) {
-        // console.log('registration failure');
         context.failedRegistration();
-      } 
-      else if (action.type === ActionTypes.USER_LOGIN) {
-        // console.log('registration success');
-        context.redirectHome();
       } 
     });
   },
+
   failedRegistration: function(){
     $('.login-failure').css('visibility', 'visible');
     $('.spinner-container').css('visibility', 'hidden');
     $('.btn-submit').prop('disabled', false);
   },
-  componentDidUnmount: function(){
+
+  successfulLogin: function(){ 
+    ViewActions.loadModal();
+    this.transitionTo('profile');
+  },
+
+  componentWillUnmount: function(){
     Dispatcher.unregister(this.token);
+    UserStore.removeChangeListener(this.successfulLogin);
   },
-  redirectHome: function(){
-    this.transitionTo("graphs");
-  },
+
   enableButton: function () {
     this.setState({
       canSubmit: true
     });
   },
+
   disableButton: function () {
     this.setState({
       canSubmit: false
     });
   },
+
   submitForm: function(data){
     // console.log(data);
     $('.spinner-container').css('visibility', 'visible');
     $('.btn-submit').prop('disabled', true);
     ViewActions.registerUser(data);
   },
+
   render: function() {
     return (
-      <Dialog openImmediately={true} >
+      <Dialog contentClassName={'signupDialog'} openImmediately={true} >
         <div className="SignupContainer">
           <h2 id='signupTitle'>Register</h2>
             <Formsy.Form onSubmit={this.submitForm} className="registration" onValid={this.enableButton} onInvalid={this.disableButton}>
@@ -92,7 +98,7 @@ var RegistrationView = React.createClass({
             </Formsy.Form>
             
         </div>
-        <div className='spinnerFailure'>
+        <div id='SignUpFailure'>
           <div className="spinner-container">
             <div className="spinner-loader">
               Loading…

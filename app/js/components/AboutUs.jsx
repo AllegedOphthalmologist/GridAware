@@ -72,14 +72,12 @@ var AboutUs = React.createClass({
     this.token = Dispatcher.register(function (dispatch) {
       var action = dispatch.action;
       if (action.type === ActionTypes.WATT_LOADED) {
-        //console.log('login failure');
         context.makeGraphs();
       } 
     });
   }, 
 
   componentDidUpdate: function(){ 
-    // this.makeGraphs();
     window.addEventListener('resize', this.reSizeGraphs);
   },
 
@@ -165,7 +163,7 @@ var AboutUs = React.createClass({
             <div className="row">
                 <div className="col-lg-12">
                   <h2>How Does The Grid Work!?</h2>
-          <GraphView height={300} width={740} margin={10} tabs={false} value={GraphTypes.MAIN} />  
+          <GraphView height={300} width={708} margin={10} tabs={false} value={GraphTypes.MAIN} />  
                         <p className="section-paragraph">Each day, the mix of energy generation resources changes as demand fluctuates. 
                         The grid operator must efficiently balance power generation and consumer electricity demand, 
                         using renewable resources whenever possible. Periods of high demand and low availability of renewable resources translate to more pollution 
@@ -185,7 +183,7 @@ var AboutUs = React.createClass({
             <div className="row">
                 <div className="col-lg-12">
                     <h2>Get Started!</h2> 
-                      <p className="section-paragraph">To get started, use our <a id='registerClick' onClick={this.handleRegister}>Registration</a> page to signup for GridAware, 
+                      <p className="section-paragraph">To get started, use our <a className='registerClick' onClick={this.handleRegister}>Registration</a> page to signup for GridAware, 
                       and link  your SmartMeter at the same time! All you need is your PG&E login.
 
                       Don't have an online account with PG&E yet? 

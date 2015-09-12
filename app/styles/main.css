@@ -1,25 +1,9 @@
 /*Nav Button*/
-
-body { 
-  margin-top: 0px;
-}
 .nav-btn {
   position: absolute;
   top: 1em;
   left: 1em;
 }
-
-/*User Profile*/
-.update-pge-form {
-  width:100%;
-  text-align: center;
-}
-
-.app-title {
-  text-align: center;
-  margin-bottom: 2em;
-}
-
 
 /* Energy Charts */
 .axis path,
@@ -89,8 +73,8 @@ body {
 }
 
 .dangerBlock {
-  fill: red;
-  opacity: 0.18;
+  fill: #FC6E51;
+  opacity: 0.2;
 }
 
 .axisScale {
@@ -98,22 +82,60 @@ body {
   font-size: 1.1rem;
 }
 
+.scrollText {
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+  opacity: 0.35;
+}
 
+.graphCircle {
+  r: 2rem;
+  fill: grey;
+}
+.graphArrow {
+  fill: white;
+  opacity: 0.5;
+}
+.graphButton {
+  position: relative;
+  z-index: 10;
+}
+.graphButton:hover {
+  opacity: 1;
+}
+
+
+.tick text{ 
+  fill: black;
+}
+
+/*Energy Modals*/
 .source1 *:not(text), path.source1{ 
-  fill: #F6BB42;
-  stroke: #F6BB42;
+  fill: #94D9BB;
+  stroke: #94D9BB;
 }
 .source2 *:not(text), path.source2{ 
   fill: #FFDE55;
   stroke: #FFDE55;
 }
 .source3 *:not(text), path.source3{ 
-  fill: #94D9BB;
-  stroke: #94D9BB;
+  fill: #F6BB42;
+  stroke: #F6BB42;
 }
 .source4 *:not(text), path.source4{ 
-  fill: #58C1BE;
-  stroke: #58C1BE;
+  fill: #FC6E51;
+  stroke: #FC6E51;
+}
+
+#donutModal { 
+  z-index: 9;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
 }
 
 /*Light Bulb*/
@@ -169,6 +191,23 @@ body {
 
 /*Forms*/
 
+.loginDialog, .signupDialog { 
+  min-width: 304px;
+}
+
+.LoginContainer{ 
+  text-align: center;
+}
+
+.SignupContainer { 
+  float: left;
+}
+
+#SignUpFailure{ 
+  float:right;
+  margin-top: 140px;
+}
+
 div.login {
   width: 500px;
 }
@@ -176,6 +215,15 @@ div.login {
 .spinner-container {
   text-align: center;
   visibility: hidden;
+  margin: 9px;
+}
+
+.graphOuterContainer .spinner-loader {
+  /*visibility: visible;*/
+  text-align: left;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .login-failure {
@@ -187,10 +235,6 @@ div.login {
   position: relative;
   width: 100%;
 }
-
-/*.form-group, #loginTitle, #signupTitle { 
-  text-align: center;
-}*/
 
 .pge-update-failure {
   position: absolute;
@@ -214,33 +258,86 @@ div.login {
   font-size: 2em;
 }
 
-.popup1, .popup2 { 
-  display: inline;
+/*Profile View*/
+#profile-header {
+  margin: 80px 0px 5em 120px;
+  font-size: 3.25em;
+}
+.summary-container {
+  margin-top: 20px;
+}
+.week-summary-header {
+  text-align: center;
+}
+
+#weekStart { 
+  margin-top: 0px !important;
+  font-size: 19px !important;
+  margin-bottom: 0px !important;
+}
+
+#totalenergyused{ 
+  font-size: 15px;
+  margin-top: 0px;
+}
+
+#lastweekKWH { 
+  font-weight: 500;
+}
+
+.energy-bar-graph rect{
+  stroke: white;
+}
+
+.energy-bar-graph{ 
+  width: 600px;
+  margin: 0px !important;
+  height: 100px;
+  position: absolute;
+  top: 10px;
+  right: -112px;
+}
+
+.update-pge-form {
+  width:100%;
+  text-align: center;
+}
+
+.app-title {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.energy-bar-graph .Green {
+  fill: #94D9BB;
+}
+
+.energy-bar-graph .Red {
+  fill: #FC6E51;
 }
 
 svg {
-    display: block;
-    position: relative;
-    margin: auto;
-    vertical-align: top;
-    overflow: hidden;
+  display: block;
+  position: relative;
+  margin: auto;
+  vertical-align: top;
+  overflow: hidden;
 }
 
-#registerClick{ 
-  cursor: pointer;
+@media(max-width:768px) {
+  #SignUpFailure{ 
+    float: left;
+    margin-top: 0px;
+  }
+  #profile-header{ 
+    font-size: 2.25em;
+    margin: 80px 0px 5em 20px; 
+  }
+  .energy-bar-graph{ 
+    width: 600px;
+    margin: 0px !important;
+    height: 100px;
+    position: static;
+  }
 }
 
-.tick text{ 
-  fill: black;
-}
-
-#donutModal { 
-  z-index: 10;
-}
-
-.svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 10px;
-    left: 0;
-}

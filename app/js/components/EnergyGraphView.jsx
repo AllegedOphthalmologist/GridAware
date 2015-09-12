@@ -129,6 +129,9 @@ var EnergyGraphView = React.createClass({
 
   drawMainGraph: function() {
 
+    var spinnerNode = React.findDOMNode(this.refs.graphSpinner);
+    var spinner = d3.select(spinnerNode).style('display', null);
+
     var el = React.findDOMNode(this.refs.graphContainer);
     el.innerHTML = '';
 
@@ -138,21 +141,27 @@ var EnergyGraphView = React.createClass({
       margin: this.props.margin,
       type: GraphTypes.MAIN,
     }, this.state);
+
+    spinner.style('display', 'none');
   },
 
   drawUserGraph: function() {
+
+    var spinnerNode = React.findDOMNode(this.refs.graphSpinner);
+    var spinner = d3.select(spinnerNode).style('display', null);
+
     var el = React.findDOMNode(this.refs.graphContainer);
     el.innerHTML = '';
 
     if (this.state.user.username) {
       if (this.state.data.Utility.length > 1) {
+        // EnergyChart.graph(el, {
+        //   height: this.props.height,
+        //   width: this.props.width,
+        //   margin: this.props.margin,
+        //   type: GraphTypes.DANGER_ZONE,
+        // }, this.state);
         EnergyChart.graph(el, {
-          height: this.props.height,
-          width: this.props.width,
-          margin: this.props.margin,
-          type: GraphTypes.DANGER_ZONE,
-        }, this.state);
-        EnergyChart.graph(el.children[0], {
           height: this.props.height,
           width: this.props.width,
           margin: this.props.margin,
@@ -168,7 +177,7 @@ var EnergyGraphView = React.createClass({
         type: GraphTypes.USER_REQUIRE,
       }, this.state);
     }
-
+    spinner.style('display', 'none');
   },
 
   handleTabChange: function(tab) {
@@ -200,7 +209,10 @@ var EnergyGraphView = React.createClass({
       <Paper className="mainGraphView" style={{margin: '30px 0', minWidth: '740px'}}>
         {tabs}
         <div className='graphOuterContainer' style={{width: this.props.width, height: this.props.height + this.props.margin}}>
-          <div className ="graphContainer" ref="graphContainer"></div>
+          <div className='spinner-container' ref='graphSpinner' style={{width: this.props.width, height: '80%', display: 'none', visibility: 'visible'}}>
+            <div className='spinner-loader'></div>
+          </div>
+          <div className="graphContainer" ref="graphContainer"></div>
         </div>
       </Paper>
 

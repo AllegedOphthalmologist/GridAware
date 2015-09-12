@@ -139,13 +139,18 @@ module.exports = {
 
     for (var i = 0; i < state.data.Utility.length; i++) {
       var userTime = new Date(state.data.Utility[i].interval_start);
-      if (userTime >= weekDate) {
-        userKwh.push({
-          point: parseFloat(state.data.Utility[i].interval_kWh),
-          time: userTime,
-          id: userTime.getTime(),
-        });
-      }
+      // if (userTime >= weekDate) {
+      //   userKwh.push({
+      //     point: parseFloat(state.data.Utility[i].interval_kWh),
+      //     time: userTime,
+      //     id: userTime.getTime(),
+      //   });
+      // }
+      userKwh.push({
+        point: parseFloat(state.data.Utility[i].interval_kWh),
+        time: userTime,
+        id: userTime.getTime(),
+      });
     }
 
     userKwh = userKwh.sort(function(a, b) {
@@ -169,7 +174,7 @@ module.exports = {
       return a.time - b.time;
     });
 
-    var weekTime = 24 * 60 * 60 * 1000 * 7 * 2;
+    var weekTime = 24 * 60 * 60 * 1000 * 10;
     var weekDate = new Date(Date.now() - weekTime);
     var userCarbon = [];
 
