@@ -3,7 +3,6 @@ if(!process.env.DEPLOY){
 }
 else{
   var tokens = {
-    utilityAPIToken: process.env.utilityAPIToken,
     wattTimeAPIToken: process.env.wattTimeAPIToken
   }
 }

@@ -6,9 +6,6 @@ var ViewActions = require('./../actions/ViewActions');
 //Store
 var BulbStore = require('./../stores/BulbStore');
 
-//Donut Modal
-var donutGraphWindow = require('./energyBreakDownView.jsx');
-
 //D3
 var BulbGlow = require('./bulbGlow.js');
 
@@ -66,18 +63,12 @@ var BulbView = React.createClass({
     }, this.state.rgb);
   },
 
-  showDonutGraph: function(){
-    if(this.props.loadModal){ 
-      ViewActions.loadModal(donutGraphWindow);
-    }
-  },
-
   render: function(){ 
     return ( 
       <div className={this.props.name}>
         <div className={this.props.SVGname} ref='bulb'></div>
         <img src={'http://uxrepo.com/static/icon-sets/ionicons/png32/256/000000/ios7-lightbulb-outline-256-000000.png'} 
-             id='donutModal' className='img-responsive' onClick={this.showDonutGraph}/>     
+             id='donutModal' className='img-responsive'/>     
       </div> 
       );
   }
