@@ -6,9 +6,7 @@ module.exports = function(app){
   //SWITCH BACK!
   if(!process.env.DEPLOY){
     app.get('/api/get24HourAhead', energyController.getTestData);
-  }
-  else{
+  } else{
     app.get('/api/get24HourAhead', energyController.get24HourAhead);
   } 
-  // app.get('/api/get24HourAhead', energyController.get24HourAhead);
 };
