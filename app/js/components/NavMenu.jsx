@@ -18,13 +18,9 @@ var ThemeManager = new mui.Styles.ThemeManager();
 var LeftNav = mui.LeftNav;
 
 //dialog boxes
-var register = require('./RegistrationView.jsx');
-var profile = require('./ProfileView.jsx');
-var login = require('./LoginView.jsx');
-
+var instructions = require('./instructionView.jsx');
 
 // Stores -- Load here so Stores can begin listening to Events
-var UserStore = require('./../stores/UserStore');
 var menuStore = require('./../stores/MenuItemStore');
 
 var NavMenu = React.createClass({
@@ -73,15 +69,10 @@ var NavMenu = React.createClass({
   },
 
   handleMenuSelect: function(e, selectedIndex, menuItem){
-    console.log(e, selectedIndex, menuItem);
-    if(menuItem.text === 'Profile'){
-      this.transitionTo('profile');
+    if(menuItem.text === 'Get Started'){
+      this.transitionTo('instructions');
     }else if(menuItem.text === 'Home'){
       this.transitionTo('/');
-    }else if(menuItem.text === 'Logout'){
-      this.transitionTo('/');
-      ViewAction.logoutUser();
-      ViewAction.showSnack();
     }else{
       ViewAction.loadModal(menuItem.route);
     }

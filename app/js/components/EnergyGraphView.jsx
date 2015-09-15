@@ -15,10 +15,7 @@ var ViewActions = require('./../actions/ViewActions');
 
 // Store
 var DataStore = require('./../stores/DataStore');
-var UserStore = require('./../stores/UserStore');
 
-// Child Views
-var GraphToolBar = require('./graphToolBar.jsx');
 
 // Root View //////////////////////////////////////////////////////
 /*
@@ -36,7 +33,6 @@ var EnergyGraphView = React.createClass({
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     margin: React.PropTypes.number,
-    tabs: React.PropTypes.bool,
     value: React.PropTypes.string,
   },
 
@@ -45,7 +41,6 @@ var EnergyGraphView = React.createClass({
   getInitialState: function() {
     return {
       data: null,
-      user: null,
       width: null,
     };
   },
@@ -80,29 +75,8 @@ var EnergyGraphView = React.createClass({
     });
   },
 
-  loadUser: function() {
-    var that = this;
-    return new Promise(function(resolve, reject) {
-      that.setState({user: UserStore.getUser()});
-
-      if (that.state.user.username) {
-        ViewActions.loadUtilityUser()
-        .then(function() {
-          resolve();
-        })
-        .catch(function(err) {
-          reject(err);
-        });
-      }
-      else {
-        resolve();
-      }
-    });
-  },
-
   handleResize: function() {
     this.setState({width: $('.graphOuterContainer').innerWidth()});
-    this.handleTabChange(this);
   },
 
   loadGraph: function(grapher) {
@@ -117,7 +91,6 @@ var EnergyGraphView = React.createClass({
 
     // Set Stores
     DataStore.addChangeListener(this.loadData);
-    UserStore.addChangeListener(this.loadUser);
 
     // Set other listeners
     window.addEventListener('resize', this.handleResize);
@@ -127,11 +100,7 @@ var EnergyGraphView = React.createClass({
     this.setState({width: $('.graphOuterContainer').innerWidth()});
 
     this.loadData()
-    .then(this.loadUser)
-    // .then(this.drawMainGraph)
-    .then(function() {
-      that.handleTabChange(that);
-    })
+    .then(this.drawMainGraph)
     .catch(function(err) {
       console.log("ERROR: ", err);
     });
@@ -144,7 +113,6 @@ var EnergyGraphView = React.createClass({
 
   componentWillUnmount: function() {
     DataStore.removeChangeListener(this.loadData);
-    UserStore.removeChangeListener(this.loadUser);
 
     window.removeEventListener('resize', this.handleResize);
   },
@@ -161,57 +129,10 @@ var EnergyGraphView = React.createClass({
     }, this.state);
   },
 
-  drawUserGraph: function() {
-
-    var el = React.findDOMNode(this.refs.graphContainer);
-    el.innerHTML = '';
-
-    if (this.state.user.username) {
-      if (this.state.data.Utility.length > 1) {
-        EnergyChart.graph(el, {
-          height: this.props.height,
-          width: this.state.width - 2 * this.props.margin,
-          margin: this.props.margin,
-          type: GraphTypes.USER_KWH,
-        }, this.state);
-      }
-    }
-    else {
-      EnergyChart.graph(el, {
-        height: this.props.height,
-        width: this.state.width - 2 * this.props.margin,
-        margin: this.props.margin,
-        type: GraphTypes.USER_REQUIRE,
-      }, this.state);
-    }
-  },
-
-  handleTabChange: function(tab) {
-
-    switch(tab.props.value) {
-
-      case GraphTypes.MAIN:
-        this.loadGraph(this.drawMainGraph);
-        break;
-
-      case GraphTypes.USER_KWH:
-        this.loadGraph(this.drawUserGraph);
-        break;
-
-      default:
-        var el = React.findDOMNode(this.refs.graphContainer);
-        console.log("TAB ERROR");
-        el.innerHTML = '';
-        break;
-    }
-  },
-
   render: function () {
-    var tabs = this.props.tabs ? <GraphToolBar handleTabChange={this.handleTabChange} ref='graphToolBar' value={this.props.value} /> : "";
     return (
 
       <Paper className="mainGraphView" style={{margin: '30px 0'}}>
-        {tabs}
         <div className='graphOuterContainer' style={{width: '80%', height: this.props.height + this.props.margin}}>
           <div className='spinner-container' ref='graphSpinner' style={{width: this.props.width, height: this.props.height, display: 'none', visibility: 'visible'}}>
             <div className='spinner-loader'></div>

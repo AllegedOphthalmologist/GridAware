@@ -115,6 +115,32 @@ hr {
     font-size: 1.25em;
 }
 
+#tagline {
+    font-size: 2em;
+    width: 75%;
+    display: block;
+    margin: auto;
+    text-align: center;
+    padding: 9px;
+}
+
+#breakdownSub, #totalSub { 
+  font-size: 12px;
+  font-style: italic;
+  display: block;
+  margin: auto; 
+  text-align: center;
+}
+
+
+#totalSub{ 
+  transform: translate(-13px,-18px);
+}
+
+#breakdownSub { 
+  transform: translate(-15px,-18px);
+}
+
 footer {
     margin: 50px 0;
 }
