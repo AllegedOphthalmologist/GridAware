@@ -132,13 +132,11 @@ var AboutUs = React.createClass({
 
                       <div className={donuts} style={{'maxWidth':'600px', 'margin': 'auto','paddingLeft':'23px', 'position':'relative'}}>
                       </div>
-              
-                      <p className='section-paragraph'> GridAware empowers consumers to use energy more intelligently and to reduce 
-                      their carbon footprint by providing 
-                      frictionless access to current grid conditions. We are thrilled to introduce the GridAware Power Bulb —
-                      a WiFi-enabled LED bulb that changes color based on energy cleanliness. Put it anywhere in your house or apartment 
-                     and start checking the state of California’s grid at a glance!</p>
 
+                      <p className='lead section-lead' id='tagline'>
+                          Energy generation resources change over the course of every day.
+                          Keep track of how clean the grid is at a glance with GridAware.
+                      </p>
                     
                 </div>
             </div>
@@ -162,11 +160,13 @@ var AboutUs = React.createClass({
             <div className="row">
                 <div className="col-lg-12">
                   <h2>How Does The Grid Work!?</h2>
+
+                  <p className="section-paragraph">Each day, the mix of energy generation resources changes as demand fluctuates and renewbles go on and offline. 
+                  The grid operator must efficiently balance power generation and consumer electricity demand, 
+                  using renewable resources whenever possible. Periods of high demand and low availability of renewable resources translate to more pollution 
+                  per unit of energy consumed. Check out the graph below to see how changing grid conditions affect carbon production (lbs) per megawatt hour (Mwh)</p>
+
           <GraphView height={300} width={800} margin={10} value={GraphTypes.MAIN} />  
-                        <p className="section-paragraph">Each day, the mix of energy generation resources changes as demand fluctuates. 
-                        The grid operator must efficiently balance power generation and consumer electricity demand, 
-                        using renewable resources whenever possible. Periods of high demand and low availability of renewable resources translate to more pollution 
-                        per unit of energy consumed. </p>
               </div>
             </div>
         </div>
