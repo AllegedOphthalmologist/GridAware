@@ -20,8 +20,6 @@ var ThemeManager = new mui.Styles.ThemeManager();
 var RaisedButton = mui.RaisedButton;
 
 // Components
-var NavMenu = require('./components/NavMenu.jsx');
-var instructions = require('./components/instructionView.jsx');
 var AboutUs = require('./components/AboutUs.jsx');
 
 // Stores -- Load here so Stores can begin listening to Events
@@ -59,18 +57,9 @@ var App = React.createClass({
     ThemeManager.setPalette(appPalette);
   },
 
-  toggleNav: function(){
-    ViewActions.toggleNavMenu();
-  },
-
   render: function(){
     return (
       <div className="app-container">
-      
-        <span className="nav-btn">
-          <RaisedButton onClick={this.toggleNav}>Menu</RaisedButton>
-        </span>
-        <NavMenu></NavMenu>
       <div className="content-container">
         <RouteHandler />
       </div>
@@ -84,7 +73,6 @@ var App = React.createClass({
 
 var routes = (
   <Route name="app" path="/" handler={App}>
-  <Route name="instructions" path="/instructions" handler={instructions} />
   <DefaultRoute name="default" handler={AboutUs} />
   </Route>
 );
