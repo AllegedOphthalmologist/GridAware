@@ -48,10 +48,10 @@ var AboutUs = React.createClass({
       this.setState({gridState: 'dirty'});
 
     } else if(0.75 > this.state.bulbData && this.state.bulbData >= 0.5){ 
-      this.setState({gridState: 'semi-dirty'});
+      this.setState({gridState: 'mostly-dirty'});
 
     } else if (0.5 > this.state.bulbData && this.state.bulbData > 0.25){ 
-      this.setState({gridState: 'semi-clean'});
+      this.setState({gridState: 'mostly-clean'});
 
     } else if (0.25 >= this.state.bulbData){ 
       this.setState({gridState: 'clean'});
