@@ -45,6 +45,12 @@
   opacity: 0.5;
 }
 
+.timeBarTitle {
+  text-anchor: end;
+  fill: blue;
+  opacity: 0.65;
+}
+
 .predictPoint {
   r: 3;
   fill: #8080FF;
@@ -80,6 +86,8 @@
 .dangerBlock {
   fill: #FC6E51;
   opacity: 0.2;
+  stroke: black;
+  stroke-width: 0.5;
 }
 
 .axisScale {
@@ -281,9 +289,14 @@ div.login {
   margin-bottom: 0px !important;
 }
 
-#totalenergyused, #explain{ 
+#totalenergyused, #explain { 
   font-size: 15px;
   margin-top: 0px;
+}
+
+.creator-name{ 
+   font-size: 20px;
+  margin: 2px !important;
 }
 
 #explain { 
