@@ -7,6 +7,8 @@
     background-size: cover;
     -o-background-size: cover;
     padding-top: 100px;
+    height: 100%;
+    overflow: hidden;
 }
 
 .registerClick{ 
@@ -20,6 +22,9 @@ body {
     background-size: cover;
     -o-background-size: cover;
     margin-top: 0px;
+    height:100%;
+    overflow: scroll;
+    -webkit-overflow-scrolling:touch;
 }
 
 #gridstate, #cali{ 
@@ -40,13 +45,18 @@ body {
 
 #information { 
     background: url('http://41.media.tumblr.com/aa5c6ce33067f5fe4e486cec203694c7/tumblr_ngyipteoMA1u0oggmo1_1280.jpg') no-repeat center center fixed;
-    height: 1200px;
+    height: 1350px;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
 }
-.glyphicon{
+
+#photoRow { 
+  margin: 30px -15px !important;
+}
+
+.glyphicon {
   border: 2px solid #FFFFFF;
   border-radius: 50%;
   display: block;
@@ -57,6 +67,13 @@ body {
   text-align: center;
   vertical-align: middle;
   width: 140px;
+}
+
+#bolt .glyphicon{ 
+  color: #FFCE54;
+}
+
+#leaf .glyphicon { 
   color: #2ECC71;
 }
 
@@ -83,10 +100,18 @@ body {
   margin: 50px 0;
 }
 
-#cont2, #cont3, #cont4 { 
+#cont2, #cont3, #cont4, #photos { 
   background-color: white;
   padding: 10px 0;
   margin: 50px 0;
+}
+
+.creator-title{ 
+ padding: 0px;
+}
+
+.githubIcon:hover{ 
+  opacity: .6;
 }
 
 .section-heading {
@@ -131,7 +156,6 @@ hr {
   margin: auto; 
   text-align: center;
 }
-
 
 #totalSub{ 
   transform: translate(-13px,-18px);
